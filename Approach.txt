@@ -1,0 +1,26 @@
+/* Design
+- Factory contract that creates all the games and stores all the current games
+using a mapping. The array contains all game IDs and the mapping is
+of game ID to game struct which stores the address and state of the game.
+- There is a function to create a new game which deploys a new game contract with
+msg.sender as the challenger, this also fires an event that represents the "invite"
+the other player. Game status is set to open.
+- Game contract contains a function to accept the invitation which changes the 
+state of the game to in-progress. This function also chooses who will be first 
+and second player based on the hashes of their concatenated public addresses.
+- The game itself will be represented by a double nested array of enum. There 
+will be 3 enum values representing the possible states of the square: O, X, or 
+EMPTY.
+- There will be two functions, first player move, and second player move. The first 
+plyer move will ensure it is only called by the first player and will check that 
+the move counter is even (so no one can make a move twice) then it will update
+the square of the game to "O". Vice versa for the second player.
+- There are 6 possible win states that will be stored in a mapping. Every time 
+an "O" is added it will add 1 to the win space and "X" will subtract 1 from the 
+win space. Every time a move is made it will check the corresponding win space. 
+If the win space is 3 first player wins the game, if it is -3 the second player 
+wins the game. This avoids looping through the game board to check wins.
+- After the game is won, state changes to closed and the game can never be
+played again.
+- Game states are also updated in the game factory contract, but can only be 
+updated by the game contracts themselves that correspond to the open games.
